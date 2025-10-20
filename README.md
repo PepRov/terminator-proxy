@@ -39,9 +39,3 @@ A lightweight Vercel serverless API that relays DNA sequences from an iOS app to
     "label": "terminator",
     "score": 0.87
 }
-
----
-
-This now accurately describes **transcription termination**, matches your DNA Proxy README format, and is ready for copy-paste.  
-
-If you like, I can also draft a **matching Swift POST request snippet** for iOS integration to include under Quick Start. Do you want me to do that?
