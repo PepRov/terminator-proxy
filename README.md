@@ -1,16 +1,16 @@
 # terminator-proxy
 
-# Terminator Proxy API for Protein Termination Prediction
+# Terminator Proxy API for Transcription Termination Prediction
 
-A lightweight Vercel serverless API that relays amino acid sequences from an iOS app to a Hugging Face termination model and returns predictions in real-time. No tokens or permanent storage required.
+A lightweight Vercel serverless API that relays DNA sequences from an iOS app to a Hugging Face transcription terminator model and returns predictions in real-time. No tokens or permanent storage required.
 
 ## Architecture Overview
 
 **The workflow is simple:**
 
-1. The iOS App sends an amino acid sequence to the Vercel API via HTTPS.  
+1. The iOS App sends a DNA sequence to the Vercel API via HTTPS.  
 2. Vercel receives the sequence and forwards it to the Hugging Face model endpoint.  
-3. The Hugging Face Hub runs the termination prediction model and returns a prediction.  
+3. The Hugging Face Hub runs the transcription termination prediction model and returns a prediction.  
 4. Vercel relays the prediction back to the iOS App, which displays the result to the user.
 
 ## Roles in Brief
@@ -21,7 +21,7 @@ A lightweight Vercel serverless API that relays amino acid sequences from an iOS
 
 ## Features
 
-- Accepts amino acid sequences via HTTP POST  
+- Accepts DNA sequences via HTTP POST  
 - Returns predictions in JSON format, e.g., `{"label":"terminator","score":0.87}`  
 - Fully serverless and tokenless  
 - Minimal setup and fast response
@@ -29,10 +29,9 @@ A lightweight Vercel serverless API that relays amino acid sequences from an iOS
 ## Quick Start
 
 1. Deploy the terminator-proxy API to Vercel (free account works fine).  
-2. In your iOS app, send a POST request to the Vercel endpoint with the amino acid sequence in JSON, e.g.:
+2. In your iOS app, send a POST request to the Vercel endpoint with the DNA sequence in JSON, e.g.:
 
 ```json
 {
-    "sequence": "MKTLLILAVLLVSS..."
+    "sequence": "ATGCGTACGTTAGC..."
 }
-
