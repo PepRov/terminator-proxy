@@ -34,7 +34,7 @@ def predict(req: SequenceRequest):
         # The api_name must match the gr.api() name in app.py exactly
         result = client.predict(
             sequence=req.sequence,
-            api_name="predict_terminator"  # remove leading slash
+            api_name="/predict_terminator"  # remove leading slash
         )
 
         print("✅ Raw result from HF client:", result)
