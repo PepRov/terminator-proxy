@@ -22,43 +22,42 @@ class SequenceRequest(BaseModel):
 @app.get("/")
 def root():
     return {"message": "Proxy server running"}
-
+    
 @app.post("/predict")
 def predict(req: SequenceRequest):
     try:
         # --- Debug: print exact sequence received ---
-        print("✅ Received sequence:", repr(req.sequence))
+        print("✅ Received sequence from client:", repr(req.sequence))
 
-        # Call the HF Space API endpoint
+        # --- Call the HF Space API endpoint ---
         result = client.predict(
             sequence=req.sequence,
-            api_name="/predict_terminator"  # note the leading slash
+            api_name="/predict_terminator"
         )
 
-        print("✅ Raw result from HF:", result)
+        # --- Handle list-wrapped tuple from Gradio ---
+        if isinstance(result, list) and len(result) == 1:
+            result = result[0]
 
-        raw_label = result[0]
-        #confidence = result[1]
-        #confidence = float(result[1]) if isinstance(result[1], (int, float, str)) else 0.0
-
-        # Expecting tuple like ("Terminator", 0.92)
-        if isinstance(result, (list, tuple)) and len(result) >= 2:
+        # --- Extract label and confidence safely ---
+        if isinstance(result, (list, tuple)) and len(result) == 2:
             label = str(result[0])
             confidence = float(result[1])
         else:
             label = "error"
             confidence = 0.0
-            
-        # Debug logs for Vercel
+
+        # --- Debug logs for Vercel ---
         print("Sequence  :", req.sequence)
         print("Prediction:", label)
         print("Confidence:", confidence)
         print("-----------------------")
 
+        # --- Return JSON to iOS client ---
         return {
             "sequence": req.sequence,
             "prediction": label,
-            "confidence": float(confidence)
+            "confidence": round(confidence, 4)
         }
 
     except Exception as e:
@@ -69,3 +68,4 @@ def predict(req: SequenceRequest):
             "confidence": 0.0,
             "error": str(e)
         }
+    
