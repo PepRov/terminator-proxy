@@ -27,37 +27,36 @@ def root():
 @app.post("/predict")
 def predict(req: SequenceRequest):
     try:
-        # --- Debug: print exact sequence received ---
-        print("✅ Received sequence from client:", repr(req.sequence))
+        print("✅ Received sequence:", repr(req.sequence))
 
-        # --- Call the HF Space API endpoint ---
-        # The api_name must match the gr.api() name in app.py exactly
+        # Call HF Space API
         result = client.predict(
             sequence=req.sequence,
-            api_name="/predict_terminator"  # remove leading slash
+            api_name="/predict_terminator"
         )
 
-        print("✅ Raw result from HF client:", result)
-
-        # --- Handle list-wrapped tuple from Gradio ---
-        if isinstance(result, list) and len(result) == 1:
-            result = result[0]
+        # Debug: inspect exactly what is returned
+        print("RAW HF RESULT:", result, type(result))
 
         # --- Extract label and confidence safely ---
-        if isinstance(result, (list, tuple)) and len(result) == 2:
-            label = str(result[0])
-            confidence = float(result[1])
+        if isinstance(result, list):
+            # Sometimes Gradio wraps output in a single-item list
+            if len(result) == 1:
+                result = result[0]
+
+            if isinstance(result, (list, tuple)) and len(result) == 2:
+                label = str(result[0])
+                confidence = float(result[1])
+            else:
+                label = "error"
+                confidence = 0.0
         else:
             label = "error"
             confidence = 0.0
 
-        # --- Debug logs for Vercel ---
-        print("Sequence  :", req.sequence)
         print("Prediction:", label)
         print("Confidence:", confidence)
-        print("-----------------------")
 
-        # --- Return JSON to iOS client ---
         return {
             "sequence": req.sequence,
             "prediction": label,
