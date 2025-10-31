@@ -14,7 +14,8 @@ app.add_middleware(
 )
 
 # Connect to your Hugging Face Space
-client = Client("Ym420/terminator-classification-space")  # public space, no token needed
+# Ensure this matches exactly the Space URL
+client = Client("Ym420/terminator-classification-space")  # public space
 
 class SequenceRequest(BaseModel):
     sequence: str
@@ -22,7 +23,7 @@ class SequenceRequest(BaseModel):
 @app.get("/")
 def root():
     return {"message": "Proxy server running"}
-    
+
 @app.post("/predict")
 def predict(req: SequenceRequest):
     try:
@@ -30,10 +31,13 @@ def predict(req: SequenceRequest):
         print("✅ Received sequence from client:", repr(req.sequence))
 
         # --- Call the HF Space API endpoint ---
+        # The api_name must match the gr.api() name in app.py exactly
         result = client.predict(
             sequence=req.sequence,
-            api_name="/predict_terminator"
+            api_name="predict_terminator"  # remove leading slash
         )
+
+        print("✅ Raw result from HF client:", result)
 
         # --- Handle list-wrapped tuple from Gradio ---
         if isinstance(result, list) and len(result) == 1:
@@ -68,4 +72,3 @@ def predict(req: SequenceRequest):
             "confidence": 0.0,
             "error": str(e)
         }
-    
