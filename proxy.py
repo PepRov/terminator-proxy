@@ -18,7 +18,7 @@ app.add_middleware(
 # --- Step 0.2: Load environment variables ---
 SHEET_URL_Terminator = os.getenv("SHEET_URL_Terminator")
 SECRET_TOKEN_Terminator = os.getenv("SECRET_TOKEN_Terminator")
-
+# https://script.google.com/macros/s/AKfycbznvQq3zeq2B0_Yg0-sQkesec8RCgcxir7Oz-mf2arbbeHv2YMiwyBVvQ8EZb-1Q2y6xQ/exec
 # 🔍 Optional: warn in logs if env vars were not found
 if SHEET_URL_Terminator is None:
     print("⚠️ WARNING: SHEET_URL_Terminator is NOT set in environment variables.")
