@@ -28,7 +28,6 @@ if SECRET_TOKEN_Terminator is None:
 # Connect to your Hugging Face Space
 TERMINATOR_SPACE = os.getenv("TERMINATOR_SPACE")
 client = Client(TERMINATOR_SPACE)
-#client = Client("Ym420/terminator-classification-space")  # public space, no token needed
 
 class SequenceRequest(BaseModel):
     sequence: str
